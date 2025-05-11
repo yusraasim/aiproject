@@ -60,7 +60,7 @@ class Graphics:
         pg.init()
         self.img = pg.image.load('img/wood.jpg')
         self.screen = pg.display.set_mode((RESOLUTION, RESOLUTION))
-        self.colors = ['blue', 'red']
+        self.colors = ['blue', 'red', 'green', 'yellow']
         self.start_tile = None
         self.target_tile = None
         self.selected_action: Optional[Action] = None
@@ -111,9 +111,21 @@ class Graphics:
 
     # Method to draw circles for each tile in a diamond shape
     def draw_diamond_board(self, board: Board):
-        blue = pg.Color(0, 0, 255)
+        '''
+        #blue = pg.Color(0, 0, 255)
+        blue = pg.Color(0, 150, 255)
         black = pg.Color(0, 0, 0)
-        red = pg.Color(255, 0, 0)
+        #red = pg.Color(255, 0, 0)
+        red = pg.Color(210, 4, 45)
+        green = pg.Color(50, 200, 50),    # Player 3 - green
+        yellow = pg.Color(255, 255, 0)     # Player 4 - yellow
+        '''
+        colors = [
+        pg.Color(0, 150, 255),    # Player 1 - blue
+        pg.Color(210, 4, 45),     # Player 2 - red
+        pg.Color(50, 200, 50),    # Player 3 - green
+        pg.Color(255, 255, 0)     # Player 4 - yellow
+    ]
 
         for i in range(board.board_size):
             for j in range(board.board_size):
@@ -121,26 +133,29 @@ class Graphics:
                 # Defining center for each circle, to gain a diamond shape
                 center_position = self.get_center_position(i, j)
 
-                if board.matrix[i][j] == 1:
-                    pg.draw.circle(surface=self.screen,
-                                   color=blue,
-                                   center=center_position,
-                                   radius=CIRCLE_RADIUS)
+                if 1 <= board.matrix[i][j] <= 4:
+                    pg.draw.circle(
+                        surface=self.screen,
+                        color=colors[board.matrix[i][j] - 1],
+                        center=center_position,
+                        radius=CIRCLE_RADIUS
+                    )
 
                 elif board.matrix[i][j] == 0:
 
                     # TODO: draw outline of the starting tiles of each player, in their respective color
                     pg.draw.circle(surface=self.screen,
-                                   color=black,
+                                   color=pg.Color(0, 0, 0),
                                    center=center_position,
                                    radius=CIRCLE_RADIUS,
                                    width=4)
-
+                '''
                 elif board.matrix[i][j] == 2:
                     pg.draw.circle(surface=self.screen,
                                    color=red,
                                    center=center_position,
                                    radius=CIRCLE_RADIUS)
+                '''
 
                 if self.start_tile is not None:
                     self.highlight_selected_peg()
@@ -254,6 +269,7 @@ class Graphics:
 
         # color the outline of circles of the circle of current player's turn
         if state.board.matrix[i][j] == state.player and (i, j) is not self.start_tile:
+            highlight_color = pg.Color(255, 255, 255)
             pg.draw.circle(surface=self.screen,
                            color=pg.Color('yellow'),
                            center=center_position,
@@ -265,6 +281,7 @@ class Graphics:
                            color=pg.Color('white'),
                            center=center_position,
                            radius=CIRCLE_RADIUS)
+            
 
     def draw_end_game(self, player: int, utility: int):
         """
@@ -279,3 +296,14 @@ class Graphics:
             screen_text = f"Player {player}|{self.colors[player - 1]} lost!"
 
         # Draw the end game screen #TODO: make it look better
+
+    def draw_end_game2(self):
+       
+        self.screen.fill((0, 0, 0))  # black background
+        font = self.pg.font.Font(None, 64)
+        #message = f"Player {player} ({self.colors[player - 1]}) {'wins!' if utility == 1 else 'lost!'}"
+        message = "Player 4 wins!"
+        text = font.render(message, True, (255, 255, 255))
+        text_rect = text.get_rect(center=(RESOLUTION // 2, RESOLUTION // 2))
+        self.screen.blit(text, text_rect)
+        self.pg.display.update()

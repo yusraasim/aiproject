@@ -1,3 +1,5 @@
+
+'''
 import random
 import time
 
@@ -27,4 +29,4 @@ class RandomPlayer(Player):
         self._total_time_spent_on_taking_actions += elapsed_time
         self._moves_count += 1
         return action
-
+'''

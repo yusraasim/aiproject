@@ -4,7 +4,7 @@ from typing import List, Tuple
 import numpy as np
 
 from game import Board
-from game.Board import bot_left_corner_coords, top_right_corner_coords
+from game.Board import bot_left_corner_coords, top_right_corner_coords,  bot_right_corner_coords, top_left_corner_coords
 from game.State import State
 
 """
@@ -19,7 +19,7 @@ def average_euclidean_to_corner(board: Board, player: int) -> float:
     distances = np.linalg.norm(indices - corner, axis=1)
     return np.mean(distances)
 
-
+'''
 def initial_avg_euclidean(board: Board):
     """
     Returns the average Euclidian distance between the two initial corner triangles
@@ -29,7 +29,24 @@ def initial_avg_euclidean(board: Board):
     diffs = bottom_corner - [0, board.board_size - 1]
     distances = np.linalg.norm(diffs, axis=1)
     return np.mean(distances)
-
+'''
+def initial_avg_euclidean(board: Board, player: int):
+    """Returns average starting distance for the given player"""
+    if player == 1:
+        start = bot_left_corner_coords(board.triangle_size, board.board_size)
+        end = top_right_corner_coords(board.triangle_size, board.board_size)
+    elif player == 2:
+        start = top_right_corner_coords(board.triangle_size, board.board_size)
+        end = bot_left_corner_coords(board.triangle_size, board.board_size)
+    elif player == 3:
+        start = top_left_corner_coords(board.triangle_size, board.board_size)
+        end = bot_right_corner_coords(board.triangle_size, board.board_size)
+    else:  # player == 4
+        start = bot_right_corner_coords(board.triangle_size, board.board_size)
+        end = top_left_corner_coords(board.triangle_size, board.board_size)
+    
+    distances = np.linalg.norm(start - end[0], axis=1)  # end[0] is first corner coordinate
+    return np.mean(distances)
 
 def average_manhattan_to_corner(board: Board, player: int) -> float:
     corner = decide_goal_corner_coordinates(board, player)
@@ -46,20 +63,29 @@ def max_manhattan_to_corner(board: Board, player: int) -> float:
 
 
 def decide_goal_corner_coordinates(board: Board, player: int):
+    """Returns target corner coordinates for the given player"""
     if player == 1:
         corner = top_right_corner_coords(board.triangle_size, board.board_size)
-    else:
+    elif player == 2:
         corner = bot_left_corner_coords(board.triangle_size, board.board_size)
+    elif player == 3:
+        corner = bot_right_corner_coords(board.triangle_size, board.board_size)
+    else:  # player == 4
+        corner = top_left_corner_coords(board.triangle_size, board.board_size)
+    
     for pair in corner:
         if board.matrix[pair[0], pair[1]] == 0:
             return pair
-
-    # Base case
+    
+    # Fallback to center of target area
     if player == 1:
-        corner = [0, board.board_size - 1]
-    else:
-        corner = [board.board_size - 1, 0]
-    return corner
+        return [0, board.board_size - 1]
+    elif player == 2:
+        return [board.board_size - 1, 0]
+    elif player == 3:
+        return [board.board_size - 1, board.board_size - 1]
+    else:  # player == 4
+        return [0, 0]
 
 
 def sum_player_pegs(board: Board, player: int) -> float:
@@ -71,8 +97,12 @@ def sum_player_pegs(board: Board, player: int) -> float:
     """
     if player == 1:
         corner = top_right_corner_coords(board.triangle_size, board.board_size)
-    else:
+    elif player == 2:
         corner = bot_left_corner_coords(board.triangle_size, board.board_size)
+    elif player == 3:
+        corner = bot_right_corner_coords(board.triangle_size, board.board_size)
+    else:  # player == 4
+        corner = top_left_corner_coords(board.triangle_size, board.board_size)
     return np.sum(board.matrix[corner[:, 0], corner[:, 1]] == player)
 
 
@@ -179,7 +209,7 @@ class AverageEuclideanToCornerHeuristic(Heuristic):
         average distance to the corner - subtract the normalized distance from 1 to get a heuristic that is higher
         when closer to the goal
         """
-        initial_euclidean = initial_avg_euclidean(state.board)
+        initial_euclidean = initial_avg_euclidean(state.board, player)
         return 1 - average_euclidean_to_corner(state.board, player) / initial_euclidean
 
 

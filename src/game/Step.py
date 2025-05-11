@@ -42,26 +42,33 @@ class Step:
             return True
         return False
 
+    """
     @staticmethod
     def _validate_jump(board: Board, src: Tuple[int, int], dest: Tuple[int, int]) -> bool:
-        """
+        
         Validate if the src and dest coordinates are valid for a JUMP type of movement - 6 permitted directions
         :param board: board object
         :param src: source peg coordinate tuple
         :param dest: destination peg coordinate tuple
         :return: flag indicating if the movement is valid
-        """
+        
         x1, y1 = src
         x2, y2 = dest
-        delta_x12 = abs(x1 - x2)
-        delta_y12 = abs(y1 - y2)
-        if (((abs(x1 + y1 - (x2 + y2)) == 4 and delta_x12 == 2) or
-             (delta_x12 == 2 and delta_y12 == 0) or
-             (delta_x12 == 0 and delta_y12 == 2)) and
-                board.matrix[(x1 + x2) // 2][(y1 + y2) // 2] != 0 and
+        delta_x = abs(x1 - x2)
+        delta_y = abs(y1 - y2)
+        # Check valid jump pattern and empty destination
+        if ((delta_x == 2 and delta_y == 0) or
+            (delta_x == 0 and delta_y == 2) or
+            (delta_x == 2 and delta_y == 2)):
+            mid_x, mid_y = (x1 + x2) // 2, (y1 + y2) // 2
+            # Can jump over any opponent's piece (not empty and not current player)
+            if (board.matrix[mid_x][mid_y] != 0 and 
+                board.matrix[mid_x][mid_y] != board.matrix[x1][y1] and
                 board.matrix[x2][y2] == 0):
-            return True
-        pass
+                return True
+        return False
+        """
+       
 
     @staticmethod
     def validate_head(board: Board, src: Tuple[int, int], dest: Tuple[int, int]) -> Optional[int]:
@@ -75,8 +82,8 @@ class Step:
         if (abs(src[0] - dest[0]) <= 1 and abs(src[1] - dest[1]) <= 1
                 and Step._validate_crawl(board, src, dest)):
             return Step.CRAWL
-        elif Step._validate_jump(board, src, dest):
-            return Step.JUMP
+        #elif Step._validate_jump(board, src, dest):
+        #    return Step.JUMP
         else:
             return None
 
@@ -91,6 +98,6 @@ class Step:
         """
         if Step._validate_end(src, dest):
             return Step.END
-        elif Step._validate_jump(board, src, dest):
-            return Step.JUMP
+        #elif Step._validate_jump(board, src, dest):
+        #    return Step.JUMP
         return None

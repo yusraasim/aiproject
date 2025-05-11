@@ -30,7 +30,8 @@ class MinimaxAIPlayer(Player):
         # Sets up multiprocessing
         super().__init__()
         mp.freeze_support()
-        self._player_type = 'minimax' + f' {title}' if title is not None else ''
+        #self._player_type = 'minimax' + f' {title}' if title is not None else ''
+        self._player_type = f'minimax_{title}' if title else 'minimax'
         self.prob = problem
         self.verbose = verbose
         self.MAX_PLAYER = max_player
@@ -63,14 +64,26 @@ class MinimaxAIPlayer(Player):
         """
 
         timer = time.perf_counter()
+
+        try:
+            action = self.alpha_beta_search(state)
+            elapsed_time = time.perf_counter() - timer
+            self._total_time_spent_on_taking_actions += elapsed_time
+            self._moves_count += 1
+            return action
+        except Exception as e:
+            print(f"Error in get_action: {e}")
+            self._moves_count += 1  # Still count as a move even if failed
+            raise
         # Get the action from the alpha-beta search query
-        action = self.alpha_beta_search(state)
+        #action = self.alpha_beta_search(state)
+
 
         # Measure the time spent on deciding the action
-        elapsed_time = time.perf_counter() - timer
-        self._total_time_spent_on_taking_actions += elapsed_time
-        self._moves_count += 1
-        return action
+        #elapsed_time = time.perf_counter() - timer
+        #self._total_time_spent_on_taking_actions += elapsed_time
+        #self._moves_count += 1
+        #return action
 
         # # Prepare thread pool
         # pool = mp.Pool(processes=16)

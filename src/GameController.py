@@ -2,13 +2,13 @@ import time
 
 from benchmarking.GameAnalytics import GameAnalytics
 from game_problem.GameProblem import GameProblem
-from players.NonRepeatRandomPlayer import NonRepeatingRandomPlayer
+#from players.NonRepeatRandomPlayer import NonRepeatingRandomPlayer
 from game_problem.Heuristic import WeightedHeuristic, SumOfPegsInCornerHeuristic, AverageManhattanToCornerHeuristic, \
     AverageEuclideanToCornerHeuristic, MaxManhattanToCornerHeuristic, EnsuredNormalizedHeuristic, \
     AverageEuclideanToEachCornerHeuristic, AverageManhattanToEachCornerHeuristic
 from players.GraphicsHumanPlayer import GraphicsHumanPlayer
 from players.MinimaxAIPlayer import MinimaxAIPlayer
-from players.RandomPlayer import RandomPlayer
+#from players.RandomPlayer import RandomPlayer
 from game_problem.ChineseCheckers import ChineseCheckers
 from game.Graphics import Graphics
 from utils import play_beep
@@ -17,16 +17,14 @@ from utils import play_beep
 def create_player(player_type, depth=6, gui=None, problem=None, max_player=None, heuristic=None):
     if player_type == 'human':
         return GraphicsHumanPlayer(gui)
-    elif player_type == 'random':
-        return RandomPlayer()
-    elif player_type == 'nonrepeatrandom':
-        return NonRepeatingRandomPlayer()
+   
     elif player_type == 'minimax':
         return MinimaxAIPlayer(problem, max_player, max_depth=depth, heuristic=heuristic, verbose=True)
     else:
         raise ValueError("Unsupported player type")
+    
 
-
+'''
 def build_test_subject_with_default_weighted_heuristic(problem: GameProblem, depth: int, verbose=False):
     heuristic1 = WeightedHeuristic([
         (SumOfPegsInCornerHeuristic(), 0.1),
@@ -118,7 +116,7 @@ def build_test_subject_weighted_single_corner_vs_weighted_each_corners(problem: 
         # MinimaxAIPlayer(problem, 1, depth2, heuristic2, verbose=verbose, title='WeightedEachCorner'),
         # MinimaxAIPlayer(problem, 2, depth1, heuristic1, verbose=verbose, title='WeightedSingleCorner'),
     ]
-
+'''
 
 def build_test_subject_both_with_weighted_each_corners(problem: GameProblem, depth: int, verbose=False):
     heuristic = WeightedHeuristic([
@@ -151,6 +149,36 @@ class GameController:
             (MaxManhattanToCornerHeuristic(), 0.2),
         ])
 
+        if args.players == 2:
+            # Handle 2-player setup
+            player1_depth = args.first_minimax_depth if args.first_player == 'minimax' else None
+            player2_depth = args.second_minimax_depth if args.second_player == 'minimax' else None
+            
+            self.players = [
+                create_player(args.first_player, depth=player1_depth, gui=self.gui,
+                            problem=self.problem, max_player=1, heuristic=default_heuristic),
+                create_player(args.second_player, depth=player2_depth, gui=self.gui,
+                            problem=self.problem, max_player=2, heuristic=default_heuristic)
+            ]
+        else:  # 4 players
+            # Handle 4-player setup
+            player1_depth = args.first_minimax_depth if args.first_player == 'minimax' else None
+            player2_depth = args.second_minimax_depth if args.second_player == 'minimax' else None
+            player3_depth = args.third_minimax_depth if args.third_player == 'minimax' else None
+            player4_depth = args.fourth_minimax_depth if args.fourth_player == 'minimax' else None
+            
+            self.players = [
+                create_player(args.first_player, depth=player1_depth, gui=self.gui,
+                            problem=self.problem, max_player=1, heuristic=default_heuristic),
+                create_player(args.second_player, depth=player2_depth, gui=self.gui,
+                            problem=self.problem, max_player=2, heuristic=default_heuristic),
+                create_player(args.third_player, depth=player3_depth, gui=self.gui,
+                            problem=self.problem, max_player=3, heuristic=default_heuristic),
+                create_player(args.fourth_player, depth=player4_depth, gui=self.gui,
+                            problem=self.problem, max_player=4, heuristic=default_heuristic)
+            ]
+
+        '''
         if args.first_player is None or args.second_player is None:
             # self.players = build_test_subject_euclidean_vs_euclidean_each_corner(self.problem, 6, 6, self.verbose)
             # self.players = build_test_subject_euclidean_vs_manhattan(self.problem, 6, 6, self.verbose)
@@ -166,7 +194,7 @@ class GameController:
                                     problem=self.problem, max_player=2, heuristic=default_heuristic)
             self.players.append(player1)
             self.players.append(player2)
-
+        '''
     def game_loop(self):
         """
         Main game loop - takes care of the game state and the players' turns.
@@ -215,6 +243,8 @@ class GameController:
         # self.analytics.plot()
 
         play_beep()
+        time.sleep(5)
+        self.gui.draw_end_game2()
 
         # Wait until quit is pressed
         if self.gui:

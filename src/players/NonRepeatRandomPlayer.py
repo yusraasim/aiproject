@@ -1,4 +1,4 @@
-import random
+'''import random
 import time
 
 from game_problem import GameProblem
@@ -40,3 +40,4 @@ class NonRepeatingRandomPlayer(Player):
         self._total_time_spent_on_taking_actions += elapsed_time
         self._moves_count += 1
         return random.choice(possible_actions)
+'''

@@ -76,7 +76,8 @@ class ChineseCheckers(GameProblem):
         new_state = State(new_board, state.player, action.step_type, action.dest)
 
         if action.step_type == Step.CRAWL or action.step_type == Step.END:
-            new_state.player = 3 - state.player
+            #new_state.player = 3 - state.player
+            new_state.player = state.player % 4 + 1  # Instead of 3 - state.player
 
         return new_state
 
@@ -86,7 +87,12 @@ class ChineseCheckers(GameProblem):
         :param state: current state of the game
         :return: flag indicating if the state is terminal
         """
-        return state.board.is_top_right_terminal() or state.board.is_bot_left_terminal()
+        #return state.board.is_top_right_terminal() or state.board.is_bot_left_terminal()
+        """Check if any player has won"""
+        return (state.board.is_top_right_terminal()    # Player 1 wins
+                or state.board.is_bot_left_terminal()  # Player 2 wins
+                or state.board.is_top_left_terminal()  # Player 3 wins
+                or state.board.is_bot_right_terminal()) # Player 4 wins
 
     def utility(self, state: State, player: int) -> int:
         """
@@ -94,13 +100,25 @@ class ChineseCheckers(GameProblem):
         :param state: current state of the game
         :param player: the player index
         :return: payoff values for each player depending on the state
-        """
+        
         if state.board.is_top_right_terminal():
             return (-1) ** (player == 2)
         elif state.board.is_bot_left_terminal():
             return (-1) ** (player == 1)
         else:
             return 0
+        """
+        """Returns 1 if specified player won, -1 if they lost, 0 otherwise"""
+        if state.board.is_top_right_terminal():
+            return 1 if player == 1 else -1
+        elif state.board.is_bot_left_terminal():
+            return 1 if player == 2 else -1
+        elif state.board.is_top_left_terminal():
+            return 1 if player == 3 else -1
+        elif state.board.is_bot_right_terminal():
+            return 1 if player == 4 else -1
+        return 0
+
 
 
 if __name__ == "__main__":

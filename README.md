@@ -1,48 +1,40 @@
-# Chinese Checkers Game AI
+# Modified Chinese Checkers with Strategic Blocking
 
-This project implements a Chinese Checkers game that can be played in various modes, including against different types of AI players and a human player via a graphical user interface (GUI). The game supports command-line arguments to specify the player types and, for AI players using the Minimax algorithm, the depth of the search.
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
+[![Pygame](https://img.shields.io/badge/Pygame-2.1.2-green)](https://www.pygame.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
+A strategic twist on classic Chinese Checkers featuring **2/4-player modes** and **blocking mechanics**, powered by Minimax AI with Alpha-Beta pruning.
+
+![alt text](image.png)
+
+
+## Key Features
+
+-  **Flexible Player Modes**: Supports both 2-player (head-to-head) and 4-player (cross formation) games
+-  **Blocking Mechanics**: Special pieces that temporarily prevent opponent jumps
+-  **Adaptive AI**: Minimax algorithm with:
+  - Alpha-Beta pruning for optimized performance
+  - Custom heuristic evaluating position, mobility, and blocking
+-  **Game Analytics**: Tracks win rates, move times, and AI decision metrics
 
 ## Installation
 
-Before running the game, ensure you have Python installed on your system. This game has been tested with Python 3.12+.
+1. **Prerequisites**:
+   - Python 3.12+
+   - Pygame 2.1.2+
+ 
+2. **Setup**:
+   ```bash
+   git clone https://github.com/yourusername/chinese-checkers-ai.git
+   cd chinese-checkers-ai
+   pip install pygame numpy parameterized matplotlib
 
-Clone the repository to your local machine:
-```bash
-git clone https://github.com/Zedrichu/Chinese-Checkers-AI.git
-cd chinese-checkers
-```
-
-## Usage
-
-To start the game, navigate to the project directory and run `main.py` with Python, specifying the options for the first and second players.
-
-```bash
-python main.py --first-player <player_type> --second-player <player_type> [options]
-```
-
-## Player types
-- `human`: A human player using the graphical user interface.
-- `random`: An AI player that chooses moves randomly.
-- `nonrepeatrandom`: An AI player that chooses moves randomly without repeating the last move.
-- `minimax`: An AI player that uses the Minimax algorithm with optional depth specification.
-
-## Options
-- `--first-minimax-depth <depth>`: Specifies the depth of the Minimax search for the first player. Only required if the first player is minimax. Default is 6.
-- `--second-minimax-depth <depth>`: Specifies the depth of the Minimax search for the second player. Only required if the second player is minimax. Default is 6.
-
-## Examples
-Start a game with a human player against a Minimax AI player with a depth of 4:
-```bash
-python main.py --first-player human --second-player minimax --second-minimax-depth 4
-```
-
-Start a game between a Minimax AI player with a default depth of 6 and a standard random AI player:
-
-```bash
-python main.py --first-player minimax --second-player random
-```
-
-#### Project completed in course 02180 Introduction to Artificial Intelligence @ Technical University of Denmark 
-<img src="https://user-images.githubusercontent.com/65953954/120001846-7f05f180-bfd4-11eb-8c11-2379a547dc9f.jpg" alt="drawing" width="100"/>
-
-
+   running the code:
+   for 3 AI and 1 human: python main.py --players 4 --first-player human --second-player minimax --third-player minimax --fourth-player minimax
+   for 1 AI and 3 human: python main.py --players 4 --first-player human --second-player human --third-player human --fourth-player minimax
+   
+3. **Explanaion**:
+    In cheniese Checkers a player has to move all their pegs to the opposite side of the board to win.
+    As u can see in thw winningboard.png that yellow pegs wins as it managed to successfully move all its pegs to the opposite as shown in(image.png).
+    Traditional rules allow the player to jump over an opponents peg but our modified rule does not. It forces the player to take a detour around a peg mincreasing the difficulty level of the game. 

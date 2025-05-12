@@ -34,7 +34,11 @@ A strategic twist on classic Chinese Checkers featuring **2/4-player modes** and
    for 3 AI and 1 human: python main.py --players 4 --first-player human --second-player minimax --third-player minimax --fourth-player minimax
    for 1 AI and 3 human: python main.py --players 4 --first-player human --second-player human --third-player human --fourth-player minimax
    
-3. **Explanaion**:
+3. **Explanation**:
     In cheniese Checkers a player has to move all their pegs to the opposite side of the board to win.
     As u can see in thw winningboard.png that yellow pegs wins as it managed to successfully move all its pegs to the opposite as shown in(img/board.png).
-    Traditional rules allow the player to jump over an opponents peg but our modified rule does not. It forces the player to take a detour around a peg mincreasing the difficulty level of the game. 
+    Traditional rules allow the player to jump over an opponents peg but our modified rule does not. It forces the player to take a detour around a peg mincreasing the difficulty level of the game.
+    **video demo**:
+   https://drive.google.com/drive/folders/1WbLhBtQO0y7PZ7S-TnNyWzBXuYTBUBbq?usp=sharing
+   
+   

@@ -6,7 +6,7 @@
 
 A strategic twist on classic Chinese Checkers featuring **2/4-player modes** and **blocking mechanics**, powered by Minimax AI with Alpha-Beta pruning.
 
-![alt text](board.png)
+![alt text](img/board.png)
 
 
 ## Key Features
@@ -36,5 +36,5 @@ A strategic twist on classic Chinese Checkers featuring **2/4-player modes** and
    
 3. **Explanaion**:
     In cheniese Checkers a player has to move all their pegs to the opposite side of the board to win.
-    As u can see in thw winningboard.png that yellow pegs wins as it managed to successfully move all its pegs to the opposite as shown in(board.png).
+    As u can see in thw winningboard.png that yellow pegs wins as it managed to successfully move all its pegs to the opposite as shown in(img/board.png).
     Traditional rules allow the player to jump over an opponents peg but our modified rule does not. It forces the player to take a detour around a peg mincreasing the difficulty level of the game. 
